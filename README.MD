@@ -53,11 +53,11 @@ No other server-side tooling is needed. The server only serves static files.
 
 ## Local Setup
 
-### Install bashblog
+Requires Docker Desktop for Mac.
+
+### Get bashblog
 
 ```sh
-mkdir -p ~/blog
-cd ~/blog
 curl -o bb.sh https://raw.githubusercontent.com/cfenollosa/bashblog/master/bb.sh
 chmod +x bb.sh
 ```
@@ -71,38 +71,54 @@ global_author="Your Name"
 global_url="https://yourdomain.com"
 ```
 
+### Build the local environment
+
+```sh
+docker compose build
+```
+
 ## Local Workflow
 
-Posts are written locally in Markdown, processed by bashblog locally, and only the generated HTML is pushed to the server.
+Posts are written locally in Markdown, processed by bashblog via Docker, previewed with Caddy locally, then rsynced to the server as static HTML.
+
+### Start the preview server
+
+```sh
+docker compose up server
+```
+
+Site is available at `http://localhost:8080`.
 
 ### Write and Publish a Post
 
 ```sh
-vim ~/blog/drafts/my-post-title.md
+vim drafts/my-post-title.md
 ```
 
-Write in standard Markdown. bashblog uses the first line as the post title if it is a `#` heading, otherwise it prompts. Add tags on the last line:
+Write in standard Markdown. bashblog uses the first line as the post title if it is a `#` heading. Add tags on the last line:
 
 ```
 Tags: writing, notes
 ```
 
-Then process and deploy:
+Process the post:
 
 ```sh
-cd ~/blog
-./bb.sh post drafts/my-post-title.md
-rsync -av --exclude="*.md" --exclude="bb.sh" . user@yourdomain.com:/var/www/blog/
+docker compose run --rm blog post drafts/my-post-title.md
+```
+
+Then deploy:
+
+```sh
+rsync -av --exclude-from=".rsync-excludes" . user@yourdomain.com:/var/www/blog/
 ```
 
 This can be wrapped in a shell function:
 
 ```sh
 publish() {
-  local file="$1"
-  cd ~/blog
-  ./bb.sh post "$file"
-  rsync -av --exclude="*.md" --exclude="bb.sh" . user@yourdomain.com:/var/www/blog/
+  docker compose run --rm blog post "$1"
+  rsync -av --exclude-from=".rsync-excludes" . user@yourdomain.com:/var/www/blog/
 }
 ```
 
@@ -111,9 +127,9 @@ Add to `~/.zshrc`, then: `publish drafts/my-post-title.md`
 ### Edit an Existing Post
 
 ```sh
-vim ~/blog/drafts/my-post-title.md
-cd ~/blog && ./bb.sh edit my-post-title.html
-rsync -av --exclude="*.md" --exclude="bb.sh" . user@yourdomain.com:/var/www/blog/
+vim drafts/my-post-title.md
+docker compose run --rm blog edit my-post-title.html
+rsync -av --exclude-from=".rsync-excludes" . user@yourdomain.com:/var/www/blog/
 ```
 
 ### Rebuild All
@@ -121,8 +137,8 @@ rsync -av --exclude="*.md" --exclude="bb.sh" . user@yourdomain.com:/var/www/blog
 If the template or config changes:
 
 ```sh
-cd ~/blog && ./bb.sh rebuild all
-rsync -av --exclude="*.md" --exclude="bb.sh" . user@yourdomain.com:/var/www/blog/
+docker compose run --rm blog rebuild all
+rsync -av --exclude-from=".rsync-excludes" . user@yourdomain.com:/var/www/blog/
 ```
 
 ## Site Structure

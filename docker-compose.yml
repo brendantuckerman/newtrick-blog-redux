@@ -1,0 +1,15 @@
+services:
+  server:
+    image: caddy:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/srv
+      - ./Caddyfile:/etc/caddy/Caddyfile
+
+  blog:
+    build: .
+    volumes:
+      - .:/blog
+    working_dir: /blog
+    entrypoint: ["bash", "./bb.sh"]
