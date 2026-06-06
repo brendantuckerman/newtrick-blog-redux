@@ -298,7 +298,6 @@ footer {
   padding-top: var(--space-m);
   border-top: 1px solid var(--color-border);
   font-size: 0.8rem;
-  color: var(--color-muted);
 }
 
 /* Fixed UI cluster (theme toggle + back to top) */
@@ -405,7 +404,7 @@ html[data-theme="dark"] {
 
 /* Back to top */
 .back-to-top {
-  color: var(--color-muted);
+  color: var(--color-link);
   text-decoration: none;
   font-size: 1.2rem;
   padding: var(--space-s) var(--space-m);
