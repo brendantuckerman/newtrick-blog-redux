@@ -3,3 +3,6 @@ CLAUDE.md
 
 # MAC
 ._DSstore
+
+# Backups
+*.gz

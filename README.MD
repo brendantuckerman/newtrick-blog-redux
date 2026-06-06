@@ -12,9 +12,82 @@ If a tool is being considered, the first question is whether it is needed at all
 
 ## Stack
 
-- **[bashblog](https://github.com/cfenollosa/bashblog)** — a single bash script that converts Markdown to HTML and generates an index page, RSS feed, and tag pages automatically. Runs locally; only HTML is pushed to the server.
+- **[bashblog](https://github.com/cfenollosa/bashblog)** — a single bash script that converts Markdown to HTML and generates an index page, RSS feed, and tag pages automatically. Runs locally on macOS; only HTML is pushed to the server.
 - **[Caddy](https://caddyserver.com/)** — a single binary web server that handles HTTPS automatically via Let's Encrypt. Config is minimal.
 - **Digital Ocean droplet** — serves the static files.
+
+## Local Setup
+
+No dependencies to install. macOS ships with bash and Python 3.
+
+### Get bashblog
+
+```sh
+curl -o bb.sh https://raw.githubusercontent.com/cfenollosa/bashblog/master/bb.sh
+chmod +x bb.sh
+```
+
+Edit the config variables at the top of `bb.sh`:
+
+```sh
+global_title="My Blog"
+global_description="Notes and writing"
+global_author="Your Name"
+global_url="https://yourdomain.com"
+```
+
+## Local Workflow
+
+Write posts locally in Markdown, build with bashblog, preview with Python's built-in server, then rsync to the server.
+
+### Preview locally
+
+```sh
+python3 -m http.server 8080
+```
+
+Site is available at `http://localhost:8080`.
+
+### Write and publish a post
+
+```sh
+vim drafts/my-post-title.md
+```
+
+Write in standard Markdown. bashblog uses the first line as the post title if it is a `#` heading. Add tags on the last line:
+
+```
+Tags: writing, notes
+```
+
+Build the post:
+
+```sh
+./bb.sh post drafts/my-post-title.md
+```
+
+Then deploy:
+
+```sh
+rsync -av --exclude-from=".rsync-excludes" . user@yourdomain.com:/var/www/blog/
+```
+
+### Edit an existing post
+
+```sh
+vim drafts/my-post-title.md
+./bb.sh edit my-post-title.html
+rsync -av --exclude-from=".rsync-excludes" . user@yourdomain.com:/var/www/blog/
+```
+
+### Rebuild all
+
+If the template or config changes:
+
+```sh
+./bb.sh rebuild all
+rsync -av --exclude-from=".rsync-excludes" . user@yourdomain.com:/var/www/blog/
+```
 
 ## Server Setup
 
@@ -43,102 +116,10 @@ yourdomain.com {
 
 Caddy handles SSL automatically. Restart with `sudo systemctl restart caddy`.
 
-### Set Up the Server Directory
+### Set up the server directory
 
 ```sh
 mkdir -p /var/www/blog
-```
-
-No other server-side tooling is needed. The server only serves static files.
-
-## Local Setup
-
-Requires Docker Desktop for Mac.
-
-### Get bashblog
-
-```sh
-curl -o bb.sh https://raw.githubusercontent.com/cfenollosa/bashblog/master/bb.sh
-chmod +x bb.sh
-```
-
-Edit the config variables at the top of `bb.sh`:
-
-```sh
-global_title="My Blog"
-global_description="Notes and writing"
-global_author="Your Name"
-global_url="https://yourdomain.com"
-```
-
-### Build the local environment
-
-```sh
-docker compose build
-```
-
-## Local Workflow
-
-Posts are written locally in Markdown, processed by bashblog via Docker, previewed with Caddy locally, then rsynced to the server as static HTML.
-
-### Start the preview server
-
-```sh
-docker compose up server
-```
-
-Site is available at `http://localhost:8080`.
-
-### Write and Publish a Post
-
-```sh
-vim drafts/my-post-title.md
-```
-
-Write in standard Markdown. bashblog uses the first line as the post title if it is a `#` heading. Add tags on the last line:
-
-```
-Tags: writing, notes
-```
-
-Process the post:
-
-```sh
-docker compose run --rm blog post drafts/my-post-title.md
-```
-
-Then deploy:
-
-```sh
-rsync -av --exclude-from=".rsync-excludes" . user@yourdomain.com:/var/www/blog/
-```
-
-This can be wrapped in a shell function:
-
-```sh
-publish() {
-  docker compose run --rm blog post "$1"
-  rsync -av --exclude-from=".rsync-excludes" . user@yourdomain.com:/var/www/blog/
-}
-```
-
-Add to `~/.zshrc`, then: `publish drafts/my-post-title.md`
-
-### Edit an Existing Post
-
-```sh
-vim drafts/my-post-title.md
-docker compose run --rm blog edit my-post-title.html
-rsync -av --exclude-from=".rsync-excludes" . user@yourdomain.com:/var/www/blog/
-```
-
-### Rebuild All
-
-If the template or config changes:
-
-```sh
-docker compose run --rm blog rebuild all
-rsync -av --exclude-from=".rsync-excludes" . user@yourdomain.com:/var/www/blog/
 ```
 
 ## Site Structure
@@ -146,34 +127,33 @@ rsync -av --exclude-from=".rsync-excludes" . user@yourdomain.com:/var/www/blog/
 ```
 ~/blog/
   bb.sh
+  css/
+    style.css        ← hand-written styles
   drafts/
     my-post-title.md
-  index.html       ← bashblog-generated post listing, serves as /
-  about.html       ← hand-written, served at /about
-  feed.rss         ← bashblog-generated
-  tag_*.html       ← bashblog-generated
-  *.html           ← individual posts
+  index.html         ← bashblog-generated post listing
+  about.html         ← hand-written, served at /about
+  feed.rss           ← bashblog-generated
+  tag_*.html         ← bashblog-generated
+  *.html             ← individual posts
 ```
 
-`about.html` is a plain HTML file — no template, no tooling. Write it once and update as needed. Link to it from bashblog's template (see `global_header` in `bb.sh`).
+`about.html` is a plain HTML file — no template, no tooling. Write it once and update as needed.
 
-The server mirrors this structure at `/var/www/blog/`, minus the drafts and source files.
+## Styling
 
-## What bashblog Generates
+bashblog wraps all generated pages with a header and footer. Set `header_file` and `footer_file` in `bb.sh` to point to your own HTML snippet files, then run `./bb.sh rebuild all`. This lets you link your own stylesheet and control the page structure.
 
-- `index.html` — post listing
+bashblog also generates `blog.css` and `main.css` with default styles. Replace or ignore these in favour of `css/style.css`.
+
+## What bashblog generates
+
+- `index.html` — post listing (do not edit directly)
 - `feed.rss` — RSS feed
 - `tag_*.html` — one page per tag
+- `blog.css`, `main.css` — default styles
 - Individual post HTML files named from the post title and date
 
-## Keeping Drafts in Version Control (Optional)
+## Version Control
 
-Keep `~/blog/` as a git repo. Add a `.gitignore` to exclude generated HTML if you only want to track source:
-
-```
-*.html
-feed.rss
-tag_*.html
-```
-
-Or track everything for a full history of the published site.
+Keep `bb.sh`, `drafts/`, `css/`, `about.html`, and any header/footer template files in git. Generated HTML and RSS can be tracked too for a full history of the published site, or excluded if you only want to track source.

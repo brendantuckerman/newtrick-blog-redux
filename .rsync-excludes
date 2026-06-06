@@ -1,7 +1,5 @@
 *.md
 bb.sh
-Dockerfile
-docker-compose.yml
-Caddyfile
 drafts/
 .rsync-excludes
+*.gz
