@@ -1,5 +1,9 @@
-*.md
 bb.sh
 drafts/
+footer.html
+*.md
+.git/
+.gitignore
 .rsync-excludes
+Caddyfile
 *.gz

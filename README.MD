@@ -1,4 +1,4 @@
-# Personal Blog
+# Newtrick blog
 
 A minimal personal blog using [bashblog](https://github.com/cfenollosa/bashblog) and [Caddy](https://caddyserver.com/), hosted on a Digital Ocean droplet.
 
@@ -10,7 +10,7 @@ Inspired by the [1MB Club](https://1mb.club/) and [motherfuckingwebsite.com](htt
 
 ## Stack
 
-- **[bashblog](https://github.com/cfenollosa/bashblog)** — a single bash script that converts Markdown to HTML and generates an index page, RSS feed, and tag pages automatically. Runs locally on macOS; only HTML is pushed to the server.
+- **[bashblog](https://github.com/cfenollosa/bashblog)** — a single bash script that converts Markdown to HTML and generates an index page, RSS feed, and tag pages automatically. Runs locally on macOS; only HTML is pushed to the server. I've made some changes to update it to HTML5 and inprove accessibility.
 - **[Caddy](https://caddyserver.com/)** — a single binary web server that handles HTTPS automatically via Let's Encrypt. Config is minimal.
 - **Digital Ocean droplet** — serves the static files.
 
@@ -27,15 +27,6 @@ brew install markdown
 ```sh
 curl -o bb.sh https://raw.githubusercontent.com/cfenollosa/bashblog/master/bb.sh
 chmod +x bb.sh
-```
-
-Edit the config variables at the top of `bb.sh`:
-
-```sh
-global_title="My Blog"
-global_description="Notes and writing"
-global_author="Your Name"
-global_url="https://yourdomain.com"
 ```
 
 ## Local Workflow
@@ -104,19 +95,33 @@ sudo apt update && sudo apt install caddy
 
 ### Configure Caddy
 
-`/etc/caddy/Caddyfile`:
+Copy `Caddyfile` from the repo to `/etc/caddy/Caddyfile`, replacing `yourdomain.com` with your actual domain:
 
 ```
 yourdomain.com {
     root * /var/www/blog
+    encode zstd gzip
     try_files {path}.html {path}
     file_server
+
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        Referrer-Policy strict-origin-when-cross-origin
+    }
+}
+
+www.yourdomain.com {
+    redir https://yourdomain.com{uri} permanent
 }
 ```
 
-`try_files` lets `/about` serve `about.html` without requiring the extension in the URL.
+- `try_files` lets `/about` serve `about.html` without the extension in the URL
+- `encode` adds gzip/zstd compression automatically
+- Caddy handles HTTPS via Let's Encrypt automatically
+- www is redirected to the apex domain
 
-Caddy handles SSL automatically. Restart with `sudo systemctl restart caddy`.
+Restart with `sudo systemctl restart caddy`.
 
 ### Set up the server directory
 
@@ -127,26 +132,27 @@ mkdir -p /var/www/blog
 ## Site Structure
 
 ```
-~/blog/
-  bb.sh
-  css/
-    style.css        ← hand-written styles
-  drafts/
-    my-post-title.md
-  index.html         ← bashblog-generated post listing
-  about.html         ← hand-written, served at /about
-  feed.rss           ← bashblog-generated
-  tag_*.html         ← bashblog-generated
-  *.html             ← individual posts
+./
+  bb.sh              ← blog generator (run locally, never deployed)
+  main.css           ← all styles
+  footer.html        ← footer template (baked into HTML on rebuild)
+  drafts/            ← markdown drafts (never deployed)
+  index.html         ← generated post listing
+  about.html         ← hand-written, deployed as-is
+  feed.rss           ← generated RSS feed
+  all_posts.html     ← generated archive
+  all_tags.html      ← generated tag index
+  tag_*.html         ← generated per-tag pages
+  *.html             ← individual post pages
+  Caddyfile          ← server config (deployed to /etc/caddy/, not /var/www/)
+  .rsync-excludes    ← rsync filter list
 ```
-
-`about.html` is a plain HTML file — no template, no tooling. Write it once and update as needed.
 
 ## Styling
 
-bashblog wraps all generated pages with a header and footer. Set `header_file` and `footer_file` in `bb.sh` to point to your own HTML snippet files, then run `./bb.sh rebuild all`. This lets you link your own stylesheet and control the page structure.
+All styles live in `main.css`. The `footer.html` template is baked into every generated page at build time — the server only receives static HTML, no templates.
 
-bashblog also generates `blog.css` and `main.css` with default styles. Replace or ignore these in favour of `css/style.css`.
+`bb.sh` is configured with `css_include=('main.css')` so only `main.css` is linked. No `blog.css`.
 
 ## What bashblog generates
 

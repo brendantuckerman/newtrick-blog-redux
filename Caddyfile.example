@@ -1,0 +1,16 @@
+yourdomain.com {
+    root * /var/www/blog
+    encode zstd gzip
+    try_files {path}.html {path}
+    file_server
+
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+        Referrer-Policy strict-origin-when-cross-origin
+    }
+}
+
+www.yourdomain.com {
+    redir https://yourdomain.com{uri} permanent
+}

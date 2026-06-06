@@ -142,7 +142,6 @@ body {
 #site-nav a:hover {
   color: var(--color-highlight);
   text-decoration: none;
-  text-underline-offset: 3px;
 }
 
 /* Focus */
@@ -174,7 +173,6 @@ main h2 a {
 
 main h2 a::before,
 main h2 a::after {
-  text-decoration: none;
   color: var(--color-text);
 }
 
@@ -292,7 +290,6 @@ footer a:visited {
 nav#all_posts a:hover,
 footer a:hover {
   color: var(--color-highlight);
-  text-decoration: none;
 }
 
 /* Footer */
@@ -419,13 +416,6 @@ html[data-theme="dark"] {
   color: var(--color-highlight);
 }
 
-/* Utility */
-.nomargin {
-  margin: 0;
-}
-.clear {
-  clear: both;
-}
 /* About */
 .about-list li {
   list-style: "> ";
