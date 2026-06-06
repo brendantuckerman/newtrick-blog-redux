@@ -13,6 +13,12 @@
       href="feed.rss"
     />
     <title>About — Newtrick Blog</title>
+    <script>
+      try {
+        var _t = localStorage.getItem("newtrick-theme");
+        if (_t) document.documentElement.setAttribute("data-theme", _t);
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -24,9 +30,9 @@
         That's a new trick: Writing from Brendan Tuckerman
       </p>
       <nav id="site-nav" aria-label="Site navigation">
-        <a href="http://localhost:8080/index.html">Home</a>
-        <a href="http://localhost:8080/all_posts.html">All posts</a>
-        <a href="http://localhost:8080/about.html">About</a>
+        <a href="http://localhost:8080/index.html">[Home]</a>
+        <a href="http://localhost:8080/all_posts.html">[All posts]</a>
+        <a href="http://localhost:8080/about.html">[About]</a>
       </nav>
     </header>
     <main id="main-content">
@@ -101,7 +107,10 @@
             </a>
             to keep things as simple as possible.
           </li>
-          <li>No JavaScript was harmed in the making of this project.</li>
+          <li>
+            The only JavaScript is to remember your light / dark mode
+            selections.
+          </li>
         </ul>
       </section>
     </main>
@@ -127,5 +136,18 @@
         >[^]</a
       >
     </div>
+    <script>
+      (function () {
+        var t = document.getElementById("theme-toggle"),
+          d = window.matchMedia("(prefers-color-scheme:dark)").matches,
+          s = localStorage.getItem("newtrick-theme");
+        if (s) t.checked = (s === "dark") !== d;
+        t.addEventListener("change", function () {
+          s = t.checked !== d ? "dark" : "light";
+          localStorage.setItem("newtrick-theme", s);
+          document.documentElement.setAttribute("data-theme", s);
+        });
+      })();
+    </script>
   </body>
 </html>

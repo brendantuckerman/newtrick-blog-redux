@@ -4,5 +4,7 @@ CLAUDE.md
 # MAC
 ._DSstore
 
-# Backups
+# Backups -these are available locally only
 *.gz
+*.md
+/drafts

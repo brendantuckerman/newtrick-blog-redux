@@ -972,6 +972,7 @@ create_includes() {
         else
             echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"$template_subscribe_browser_button\" href=\"$global_feedburner\" />"
         fi
+        echo '<script>try{var _t=localStorage.getItem("newtrick-theme");if(_t)document.documentElement.setAttribute("data-theme",_t)}catch(e){}</script>'
         } > ".header.html"
     fi
 

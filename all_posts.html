@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="main.css">
 <link rel="stylesheet" href="blog.css">
 <link rel="alternate" type="application/rss+xml" title="Subscribe to this page..." href="feed.rss" />
+<script>try{var _t=localStorage.getItem("newtrick-theme");if(_t)document.documentElement.setAttribute("data-theme",_t)}catch(e){}</script>
 <title>Newtrick Blog &mdash; All posts</title>
 <meta name="description" content="That's a new trick: Writing from Brendan Tuckerman">
 </head><body>
@@ -34,4 +35,5 @@
 <input type="checkbox" id="theme-toggle" role="switch" aria-label="Dark mode"><label for="theme-toggle" class="theme-toggle">[mode=<span class="theme-show-light theme-value">light</span><span class="theme-show-dark theme-value">dark</span>]</label>
 <a href="#site-header" class="back-to-top" aria-label="Back to top">[^]</a>
 </div>
+<script>(function(){var t=document.getElementById("theme-toggle"),d=window.matchMedia("(prefers-color-scheme:dark)").matches,s=localStorage.getItem("newtrick-theme");if(s)t.checked=(s==="dark")!==d;t.addEventListener("change",function(){s=(t.checked!==d)?"dark":"light";localStorage.setItem("newtrick-theme",s);document.documentElement.setAttribute("data-theme",s)})})();</script>
 </body></html>

@@ -378,8 +378,9 @@ footer {
   }
 }
 
-/* Checked from light system → force dark */
-:root:has(#theme-toggle:checked) {
+/* Checked from light system → force dark / JS-persisted dark */
+:root:has(#theme-toggle:checked),
+html[data-theme="dark"] {
   --color-bg: #282a36;
   --color-text: #f8f8f2;
   --color-muted: #6272a4;
@@ -390,9 +391,10 @@ footer {
   --color-link-visited: #bd93f9;
 }
 
-/* Checked from dark system → force light (overrides above via cascade) */
+/* Checked from dark system → force light / JS-persisted light */
 @media (prefers-color-scheme: dark) {
-  :root:has(#theme-toggle:checked) {
+  :root:has(#theme-toggle:checked),
+  html[data-theme="light"] {
     --color-bg: #f8f8f2;
     --color-text: #282a36;
     --color-muted: #44475a;
