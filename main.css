@@ -113,7 +113,7 @@ body {
   color: var(--color-muted);
 }
 
-#site-nav a::before:not(#site-nav a:first-of-type) {
+#site-nav a + a::before {
   content: "|| ";
 }
 
@@ -144,6 +144,20 @@ a:visited {
 main h2 a {
   color: var(--color-text);
   text-decoration: none;
+}
+
+main h2 a::before,
+main h2 a::after {
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+main h2 a::before {
+  content: "brendantuckerman@newtrick:~$ ";
+}
+
+main h2 a::after {
+  content: "_";
 }
 
 #site-header a:hover,
@@ -209,13 +223,14 @@ main pre {
 }
 
 pre.ascii-title {
-  background: var(--color-text);
-  color: var(--color-bg);
-  padding: var(--space-l) var(--space-m);
+  background: none;
+  padding: 0;
+  color: var(--color-link);
   font-size: 1rem;
   line-height: 1.25;
   margin-bottom: var(--space-xl);
   overflow-x: auto;
+  text-shadow: 4px 4px 0 var(--color-muted);
 }
 
 main img {
@@ -240,16 +255,21 @@ nav#all_posts {
 
 /* Footer */
 footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: var(--space-s);
   margin-top: var(--space-xl);
   padding-top: var(--space-m);
   border-top: 1px solid var(--color-border);
   font-size: 0.8rem;
   color: var(--color-muted);
+}
+
+/* Fixed UI cluster (theme toggle + back to top) */
+.fixed-ui {
+  position: fixed;
+  bottom: var(--space-m);
+  right: var(--space-m);
+  display: flex;
+  align-items: center;
+  gap: var(--space-s);
 }
 
 /* Theme toggle */
@@ -342,9 +362,6 @@ footer {
 
 /* Back to top */
 .back-to-top {
-  position: fixed;
-  bottom: var(--space-m);
-  right: var(--space-m);
   color: var(--color-muted);
   text-decoration: none;
   font-size: 1.2rem;
