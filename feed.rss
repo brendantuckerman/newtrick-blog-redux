@@ -2,60 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
 <channel><title>Newtrick Blog</title><link>http://localhost:8080/index.html</link>
 <description>That's a new trick: Writing from Brendan Tuckerman</description><language>en</language>
-<lastBuildDate>Sat, 06 Jun 2026 15:35:54 +1000</lastBuildDate>
-<pubDate>Sat, 06 Jun 2026 15:35:54 +1000</pubDate>
+<lastBuildDate>Sat, 06 Jun 2026 17:06:31 +1000</lastBuildDate>
+<pubDate>Sat, 06 Jun 2026 17:06:31 +1000</pubDate>
 <atom:link href="http://localhost:8080/feed.rss" rel="self" type="application/rss+xml" />
-<item><title>
-A second post
-</title><description><![CDATA[
-
-<p><strong>Do we see bold?</strong></p>
-
-<hr />
-]]></description><link>http://localhost:8080/a-second-post.html</link>
-<guid>http://localhost:8080/./a-second-post.html</guid>
-<dc:creator></dc:creator>
-<pubDate>Sat, 06 Jun 2026 11:01:04 +1000</pubDate></item>
-<item><title>
-10 years late, right on time
-</title><description><![CDATA[
-
-
-<h2>My personal blog with the principle of least power</h2>
-
-<p>~~A test~~</p>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- text end -->
-]]></description><link>http://localhost:8080/h110-years-late-right-on-timeh1.html</link>
-<guid>http://localhost:8080/./h110-years-late-right-on-timeh1.html</guid>
-<dc:creator></dc:creator>
-<pubDate>Sat, 06 Jun 2026 10:54:40 +1000</pubDate></item>
 </channel></rss>
