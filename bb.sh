@@ -24,17 +24,17 @@ global_variables() {
     # The typical subtitle for each blog
     global_description="That's a new trick: Writing from Brendan Tuckerman"
     # The public base URL for this blog
-    global_url="http://example.com/blog"
+    global_url="http://localhost:8080"
 
     # Your name
     global_author="Brendan Tuckerman"
     # You can use twitter or facebook or anything for global_author_url
-    global_author_url="http://twitter.com/example"
+    global_author_url="https://www.linkedin.com/in/brendan-tuckerman-3b24a030b/"
     # Your email
     global_email="newtrick2020@protonmail.com"
 
     # CC by-nc-nd is a good starting point, you can change this to "&copy;" for Copyright
-    global_license="CC by-nc-nd"
+    global_license="&copy;"
 
     # If you have a Google Analytics ID (UA-XXXXX) and wish to use the standard
     # embedding code, put it on global_analytics
@@ -95,7 +95,7 @@ global_variables() {
     # DO NOT name them .header.html, .footer.html or they will be overwritten
     # leave blank to generate them, recommended
     header_file=""
-    footer_file=""
+    footer_file="footer.html"
     # extra content to add just after we open the <body> tag
     # and before the actual blog content
     body_begin_file=""
@@ -152,7 +152,7 @@ global_variables() {
     # Experts only. You may need to tune the locales too
     # Leave empty for no conversion, which is not recommended
     # This default filter respects backwards compatibility
-    convert_filename="iconv -f utf-8 -t ascii//translit | sed 's/^-*//' | tr [:upper:] [:lower:] | tr ' ' '-' | tr -dc '[:alnum:]-'"
+    convert_filename="sed 's/<[^>]*>//g' | iconv -f utf-8 -t ascii//translit | sed 's/^-*//' | tr [:upper:] [:lower:] | tr ' ' '-' | tr -dc '[:alnum:]-'"
 
     # URL where you can view the post while it's being edited
     # same as global_url by default
@@ -442,7 +442,8 @@ create_html_page() {
     # html, head
     {
         cat ".header.html"
-        echo "<title>$title</title>"
+        plain_title=$(echo "$title" | sed 's/<[^>]*>//g')
+        echo "<title>$plain_title</title>"
         google_analytics
         twitter_card "$content" "$title"
         echo "</head><body>"
@@ -450,37 +451,36 @@ create_html_page() {
         [[ -n $body_begin_file ]] && cat "$body_begin_file"
         [[ $filename = $index_file* ]] && [[ -n $body_begin_file_index ]] && cat "$body_begin_file_index"
         # body divs
-        echo '<div id="divbodyholder">'
-        echo '<div class="headerholder"><div class="header">'
-        # blog title
-        echo '<div id="title">'
+        echo '<header id="site-header">'
         cat .title.html
-        echo '</div></div></div>' # title, header, headerholder
-        echo '<div id="divbody"><div class="content">'
+        echo '</header>'
+        echo '<main>'
 
         file_url=${filename#./}
         file_url=${file_url%.rebuilt} # Get the correct URL when rebuilding
         # one blog entry
         if [[ $index == no ]]; then
             echo '<!-- entry begin -->' # marks the beginning of the whole post
-            echo "<h3><a class=\"ablack\" href=\"$file_url\">"
-            # remove possible <p>'s on the title because of markdown conversion
+            # strip paragraph and heading tags from markdown conversion
             title=${title//<p>/}
             title=${title//<\/p>/}
-            echo "$title"
-            echo '</a></h3>'
+            title=${title//<h1>/}
+            title=${title//<\/h1>/}
+            echo "<h2><a href=\"$file_url\">$title</a></h2>"
             if [[ -z $timestamp ]]; then
                 echo "<!-- $date_inpost: #$(LC_ALL=$date_locale date +"$date_format_timestamp")# -->"
             else
                 echo "<!-- $date_inpost: #$(LC_ALL=$date_locale date +"$date_format_timestamp" --date="$timestamp")# -->"
             fi
             if [[ -z $timestamp ]]; then
-                echo -n "<div class=\"subtitle\">$(LC_ALL=$date_locale date +"$date_format")"
+                datetime=$(LC_ALL=$date_locale date +"%Y-%m-%d")
+                echo -n "<time class=\"subtitle\" datetime=\"$datetime\">$(LC_ALL=$date_locale date +"$date_format")"
             else
-                echo -n "<div class=\"subtitle\">$(LC_ALL=$date_locale date +"$date_format" --date="$timestamp")"
+                datetime=$(LC_ALL=$date_locale date +"%Y-%m-%d" --date="$timestamp")
+                echo -n "<time class=\"subtitle\" datetime=\"$datetime\">$(LC_ALL=$date_locale date +"$date_format" --date="$timestamp")"
             fi
             [[ -n $author ]] && echo -e " &mdash; \n$author"
-            echo "</div>"
+            echo "</time>"
             echo '<!-- text begin -->' # This marks the text body, after the title, date...
         fi
         cat "$content" # Actual content
@@ -492,15 +492,13 @@ create_html_page() {
             echo '<!-- entry end -->' # absolute end of the post
         fi
 
-        echo '</div>' # content
+        echo '</main>'
 
         # Add disqus commments except for index and all_posts pages
         [[ $index == no ]] && disqus_body
 
         # page footer
         cat .footer.html
-        # close divs
-        echo '</div></div>' # divbody and divbodyholder
         disqus_footer
         [[ -n $body_end_file ]] && cat "$body_end_file"
         echo '</body></html>'
@@ -686,7 +684,7 @@ all_posts() {
         done < <(ls -t ./*.html)
         echo "" 1>&3
         echo "</ul>"
-        echo "<div id=\"all_posts\"><a href=\"./$index_file\">$template_archive_index_page</a></div>"
+        echo "<nav id=\"all_posts\" aria-label=\"Blog navigation\"><a href=\"./$index_file\">$template_archive_index_page</a></nav>"
     } 3>&1 >"$contentfile"
 
     create_html_page "$contentfile" "$archive_index.tmp" yes "$global_title &mdash; $template_archive_title" "$global_author"
@@ -721,7 +719,7 @@ all_tags() {
         done
         echo "" 1>&3
         echo "</ul>"
-        echo "<div id=\"all_posts\"><a href=\"./$index_file\">$template_archive_index_page</a></div>"
+        echo "<nav id=\"all_posts\" aria-label=\"Blog navigation\"><a href=\"./$index_file\">$template_archive_index_page</a></nav>"
     } 3>&1 > "$contentfile"
 
     create_html_page "$contentfile" "$tags_index.tmp" yes "$global_title &mdash; $template_tags_title" "$global_author"
@@ -757,7 +755,7 @@ rebuild_index() {
 
         feed=$blog_feed
         if [[ -n $global_feedburner ]]; then feed=$global_feedburner; fi
-        echo "<div id=\"all_posts\"><a href=\"$archive_index\">$template_archive</a> &mdash; <a href=\"$tags_index\">$template_tags_title</a> &mdash; <a href=\"$feed\">$template_subscribe</a></div>"
+        echo "<nav id=\"all_posts\" aria-label=\"Blog navigation\"><a href=\"$archive_index\">$template_archive</a> &mdash; <a href=\"$tags_index\">$template_tags_title</a> &mdash; <a href=\"$feed\">$template_subscribe</a></nav>"
     } 3>&1 >"$contentfile"
 
     echo ""
@@ -847,14 +845,14 @@ rebuild_tags() {
 #
 # $1 the html file
 get_post_title() {
-    awk '/<h3><a class="ablack" href=".+">/, /<\/a><\/h3>/{if (!/<h3><a class="ablack" href=".+">/ && !/<\/a><\/h3>/) print}' "$1"
+    sed -n 's/.*<h2><a href="[^"]*">\(.*\)<\/a><\/h2>.*/\1/p' "$1" | head -1
 }
 
 # Return the post author
 #
 # $1 the html file
 get_post_author() {
-    awk '/<div class="subtitle">.+/, /<!-- text begin -->/{if (!/<div class="subtitle">.+/ && !/<!-- text begin -->/) print}' "$1" | sed 's/<\/div>//g'
+    awk '/<time class="subtitle".+/, /<!-- text begin -->/{if (!/<time class="subtitle".+/ && !/<!-- text begin -->/) print}' "$1" | sed 's/<\/time>//g'
 }
 
 # Displays a list of the tags
@@ -946,17 +944,22 @@ make_rss() {
 # generate headers, footers, etc
 create_includes() {
     {
-        echo "<h1 class=\"nomargin\"><a class=\"ablack\" href=\"$global_url/$index_file\">$global_title</a></h1>"
-        echo "<div id=\"description\">$global_description</div>"
+        echo "<h1 class=\"site-title\"><a href=\"$global_url/$index_file\">$global_title</a></h1>"
+        echo "<p id=\"description\" class=\"site-description\">$global_description</p>"
+        echo "<nav id=\"site-nav\" aria-label=\"Site navigation\">"
+        echo "  <a href=\"$global_url/$index_file\">Home</a>"
+        echo "  <a href=\"$global_url/$archive_index\">All posts</a>"
+        echo "  <a href=\"$global_url/about.html\">About</a>"
+        echo "</nav>"
     } > ".title.html"
 
     if [[ -f $header_file ]]; then cp "$header_file" .header.html
     else {
-        echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'
-        echo '<html xmlns="http://www.w3.org/1999/xhtml"><head>'
-        echo '<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />'
-        echo '<meta name="viewport" content="width=device-width, initial-scale=1.0" />'
-        printf '<link rel="stylesheet" href="%s" type="text/css" />\n' "${css_include[@]}"
+        echo '<!DOCTYPE html>'
+        echo '<html lang="en"><head>'
+        echo '<meta charset="UTF-8">'
+        echo '<meta name="viewport" content="width=device-width, initial-scale=1.0">'
+        printf '<link rel="stylesheet" href="%s">\n' "${css_include[@]}"
         if [[ -z $global_feedburner ]]; then
             echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"$template_subscribe_browser_button\" href=\"$blog_feed\" />"
         else
@@ -1040,6 +1043,11 @@ rebuild_all_entries() {
         echo -n "."
         # Get the title and entry, and rebuild the html structure from scratch (divs, title, description...)
         title=$(get_post_title "$i")
+        # Fallback: read title from companion markdown file if HTML title is missing
+        if [[ -z $title ]]; then
+            md_file="${i%.html}.md"
+            [[ -f $md_file ]] && title=$(head -1 "$md_file" | sed 's/^#* *//')
+        fi
 
         get_html_file_content 'text' 'text' <"$i" >> "$contentfile"
 

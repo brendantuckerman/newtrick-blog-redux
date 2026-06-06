@@ -6,9 +6,7 @@ No framework. No database. No build pipeline. Static HTML served directly.
 
 ## Philosophy
 
-Inspired by the [1MB Club](https://1mb.club/) and [motherfuckingwebsite.com](https://motherfuckingwebsite.com/). The guiding principle is the **rule of least power** — use only what is needed to get the job done. Sub-1MB page weight is a useful heuristic, not a hard constraint.
-
-If a tool is being considered, the first question is whether it is needed at all.
+Inspired by the [1MB Club](https://1mb.club/) and [motherfuckingwebsite.com](https://motherfuckingwebsite.com/). The guiding principle is the **rule of least power** — use only what is needed to get the job done.
 
 ## Stack
 
@@ -18,7 +16,11 @@ If a tool is being considered, the first question is whether it is needed at all
 
 ## Local Setup
 
-No dependencies to install. macOS ships with bash and Python 3.
+macOS ships with bash and Python 3, so the only dependency you will need installed is the markdown binary:
+
+```zsh
+brew install markdown
+```
 
 ### Get bashblog
 
