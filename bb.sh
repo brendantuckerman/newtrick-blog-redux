@@ -140,7 +140,7 @@ global_variables() {
     template_twitter_comment="&lt;Type your comment here but please leave the URL so that other people can follow the comments&gt;"
 
     # The locale to use for the dates displayed on screen
-    date_format="%B %d, %Y"
+    date_format="[ %Y-%m-%d ]"
     date_locale="C"
     date_inpost="bashblog_timestamp"
     # Don't change these dates
@@ -444,9 +444,16 @@ create_html_page() {
         cat ".header.html"
         plain_title=$(echo "$title" | sed 's/<[^>]*>//g')
         echo "<title>$plain_title</title>"
+        if [[ $index == no && -f $content ]]; then
+            meta_desc=$(sed 's/<[^>]*>//g' "$content" | tr '\n' ' ' | sed 's/  */ /g; s/"/'"'"'/g' | head -c 160)
+            echo "<meta name=\"description\" content=\"${meta_desc:-$global_description}\">"
+        else
+            echo "<meta name=\"description\" content=\"$global_description\">"
+        fi
         google_analytics
         twitter_card "$content" "$title"
         echo "</head><body>"
+        echo '<a class="skip-link" href="#main-content">Skip to main content</a>'
         # stuff to add before the actual body content
         [[ -n $body_begin_file ]] && cat "$body_begin_file"
         [[ $filename = $index_file* ]] && [[ -n $body_begin_file_index ]] && cat "$body_begin_file_index"
@@ -454,7 +461,7 @@ create_html_page() {
         echo '<header id="site-header">'
         cat .title.html
         echo '</header>'
-        echo '<main>'
+        echo '<main id="main-content">'
 
         file_url=${filename#./}
         file_url=${file_url%.rebuilt} # Get the correct URL when rebuilding
@@ -755,7 +762,7 @@ rebuild_index() {
 
         feed=$blog_feed
         if [[ -n $global_feedburner ]]; then feed=$global_feedburner; fi
-        echo "<nav id=\"all_posts\" aria-label=\"Blog navigation\"><a href=\"$archive_index\">$template_archive</a> &mdash; <a href=\"$tags_index\">$template_tags_title</a> &mdash; <a href=\"$feed\">$template_subscribe</a></nav>"
+        echo "<nav id=\"all_posts\" aria-label=\"Blog navigation\"><a href=\"$archive_index\">$template_archive</a> <a href=\"$tags_index\">$template_tags_title</a> <a href=\"$feed\">$template_subscribe</a></nav>"
     } 3>&1 >"$contentfile"
 
     echo ""
@@ -947,9 +954,9 @@ create_includes() {
         echo "<h1 class=\"site-title\"><a href=\"$global_url/$index_file\">$global_title</a></h1>"
         echo "<p id=\"description\" class=\"site-description\">$global_description</p>"
         echo "<nav id=\"site-nav\" aria-label=\"Site navigation\">"
-        echo "  <a href=\"$global_url/$index_file\">Home</a>"
-        echo "  <a href=\"$global_url/$archive_index\">All posts</a>"
-        echo "  <a href=\"$global_url/about.html\">About</a>"
+        echo "  <a href=\"$global_url/$index_file\">[Home]</a>"
+        echo "  <a href=\"$global_url/$archive_index\">[All posts]</a>"
+        echo "  <a href=\"$global_url/about.html\">[About]</a>"
         echo "</nav>"
     } > ".title.html"
 

@@ -1,23 +1,36 @@
-<!DOCTYPE html>
-<html lang="en"><head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="main.css">
-<link rel="stylesheet" href="blog.css">
-<link rel="alternate" type="application/rss+xml" title="Subscribe to this page..." href="feed.rss">
-<title>About — Newtrick Blog</title>
-</head><body>
-<header id="site-header">
-<h1 class="site-title"><a href="http://localhost:8080/index.html">Newtrick Blog</a></h1>
-<p id="description" class="site-description">That's a new trick: Writing from Brendan Tuckerman</p>
-<nav id="site-nav" aria-label="Site navigation">
-  <a href="http://localhost:8080/index.html">Home</a>
-  <a href="http://localhost:8080/all_posts.html">All posts</a>
-  <a href="http://localhost:8080/about.html">About</a>
-</nav>
-</header>
-<main>
-<pre class="ascii-title" role="img" aria-label="Brendan Tuckerman">
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="About Brendan Tuckerman" />
+    <link rel="stylesheet" href="main.css" />
+    <link rel="stylesheet" href="blog.css" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Subscribe to this page..."
+      href="feed.rss"
+    />
+    <title>About — Newtrick Blog</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header id="site-header">
+      <h1 class="site-title">
+        <a href="http://localhost:8080/index.html">Newtrick Blog</a>
+      </h1>
+      <p id="description" class="site-description">
+        That's a new trick: Writing from Brendan Tuckerman
+      </p>
+      <nav id="site-nav" aria-label="Site navigation">
+        <a href="http://localhost:8080/index.html">Home</a>
+        <a href="http://localhost:8080/all_posts.html">All posts</a>
+        <a href="http://localhost:8080/about.html">About</a>
+      </nav>
+    </header>
+    <main id="main-content">
+      <pre class="ascii-title" role="img" aria-label="Brendan Tuckerman">
 ████  ████  █████ █   █ ████   ███  █   █
 █   █ █   █ █     ██  █ █   █ █   █ ██  █
 ████  ███   ████  █ █ █ █   █ █████ █ █ █
@@ -29,11 +42,90 @@
   █   █   █ █     ███   ████  ███   █ █ █ █████ █ █ █
   █   █   █ █     █  █  █     █  █  █   █ █   █ █  ██
   █    ███   ████ █   █ █████ █   █ █   █ █   █ █   █
-</pre>
-</main>
-<footer>
-<input type="checkbox" id="theme-toggle"><label for="theme-toggle" class="theme-toggle">[mode=<span class="theme-show-light theme-value">light</span><span class="theme-show-dark theme-value">dark</span>]</label>
-<p class="footer-meta">CC by-nc-nd <a href="https://www.linkedin.com/in/brendan-tuckerman-3b24a030b/">Brendan Tuckerman</a> &mdash; <a href="mailto:newtrick2020&#64;protonmail&#46;com">newtrick2020&#64;protonmail&#46;com</a></p>
-</footer>
-<a href="#site-header" class="back-to-top" aria-label="Back to top">[^]</a>
-</body></html>
+</pre
+      >
+      <section>
+        <h2>About me</h2>
+        <ul class="about-list">
+          <li>I'm a former English teacher turned Web developer.</li>
+          <li>
+            Working mostly in Drupal, I like building stuff that everyone can
+            use.
+          </li>
+          <li>
+            If you want to get in touch, reach out via
+            <a
+              href="https://www.linkedin.com/in/brendan-tuckerman-3b24a030b/"
+              target="_blank"
+              rel="noreferer nofollow"
+              >Linkedin</a
+            >
+            or
+            <a
+              href="https://drupal.slack.com/team/U060WJR5HJR"
+              target="_blank"
+              rel="noreferer nofollow"
+            >
+              Drupal Slack.</a
+            >
+          </li>
+        </ul>
+      </section>
+      <hr />
+      <section>
+        <h2>About this blog</h2>
+        <ul class="about-list">
+          <li>
+            This site was inspired by
+            <a
+              href="https://blog.gypsydave5.com/posts/2024/4/12/htmx-and-the-rule-of-least-power/"
+              target="_blank"
+              rel="noreferrer nofollow"
+              >a blog post</a
+            >
+            about the
+            <a
+              href="https://www.w3.org/2001/tag/doc/leastPower.html"
+              target="_blank"
+              rel="noreferrer nofollow"
+              >'rule of least power'.</a
+            >
+          </li>
+          <li>
+            It uses a modified version of
+            <a
+              href="https://github.com/cfenollosa/bashblog"
+              target="_blank"
+              rel="noreferrer nofollow"
+              >bashblog
+            </a>
+            to keep things as simple as possible.
+          </li>
+          <li>No JavaScript was harmed in the making of this project.</li>
+        </ul>
+      </section>
+    </main>
+    <footer>
+      <p class="footer-meta">
+        &copy;
+        <a href="https://www.linkedin.com/in/brendan-tuckerman-3b24a030b/"
+          >Brendan Tuckerman</a
+        >
+      </p>
+    </footer>
+    <div class="fixed-ui">
+      <input
+        type="checkbox"
+        id="theme-toggle"
+        role="switch"
+        aria-label="Dark mode"
+      /><label for="theme-toggle" class="theme-toggle"
+        >[mode=<span class="theme-show-light theme-value">light</span
+        ><span class="theme-show-dark theme-value">dark</span>]</label
+      >
+      <a href="#site-header" class="back-to-top" aria-label="Back to top"
+        >[^]</a
+      >
+    </div>
+  </body>
+</html>
