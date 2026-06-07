@@ -177,7 +177,7 @@ main h2 a::after {
 }
 
 main h2 a::before {
-  content: "brendantuckerman@newtrick:~$ " / "";
+  content: "brendan@newtrick: ~$ " / "";
 }
 
 main h2 a::after {

@@ -9,6 +9,11 @@ yourdomain.com {
         X-Frame-Options DENY
         Referrer-Policy strict-origin-when-cross-origin
     }
+
+    handle_errors {
+        rewrite * /404.html
+        file_server
+    }
 }
 
 www.yourdomain.com {
