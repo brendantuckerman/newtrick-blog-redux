@@ -73,6 +73,7 @@ global_variables() {
     # Add them as a bash array, e.g. non_blogpost_files=("news.html" "test.html")
     non_blogpost_files=(
         "about.html"
+        "404.html"
         )
 
     # feed file (rss in this case)
@@ -441,15 +442,22 @@ create_html_page() {
     # Create the actual blog post
     # html, head
     {
+        file_url=${filename#./}
+        file_url=${file_url%.rebuilt}
         cat ".header.html"
         plain_title=$(echo "$title" | sed 's/<[^>]*>//g')
         echo "<title>$plain_title</title>"
+        meta_desc=""
         if [[ $index == no && -f $content ]]; then
             meta_desc=$(sed 's/<[^>]*>//g' "$content" | tr '\n' ' ' | sed 's/  */ /g; s/"/'"'"'/g' | head -c 160)
-            echo "<meta name=\"description\" content=\"${meta_desc:-$global_description}\">"
-        else
-            echo "<meta name=\"description\" content=\"$global_description\">"
         fi
+        echo "<meta name=\"description\" content=\"${meta_desc:-$global_description}\">"
+        echo "<link rel=\"canonical\" href=\"$global_url/$file_url\">"
+        echo "<meta property=\"og:site_name\" content=\"$global_title\">"
+        echo "<meta property=\"og:title\" content=\"$plain_title\">"
+        [[ $index == no ]] && echo "<meta property=\"og:type\" content=\"article\">" || echo "<meta property=\"og:type\" content=\"website\">"
+        echo "<meta property=\"og:description\" content=\"${meta_desc:-$global_description}\">"
+        echo "<meta property=\"og:url\" content=\"$global_url/$file_url\">"
         google_analytics
         twitter_card "$content" "$title"
         echo "</head><body>"
@@ -463,8 +471,6 @@ create_html_page() {
         echo '</header>'
         echo '<main id="main-content">'
 
-        file_url=${filename#./}
-        file_url=${file_url%.rebuilt} # Get the correct URL when rebuilding
         # one blog entry
         if [[ $index == no ]]; then
             echo '<!-- entry begin -->' # marks the beginning of the whole post
@@ -948,6 +954,40 @@ make_rss() {
     chmod 644 "$blog_feed"
 }
 
+# Generate sitemap.xml with all pages and posts
+make_sitemap() {
+    echo -n "Making sitemap "
+
+    sitemapfile=sitemap.xml.$RANDOM
+    while [[ -f $sitemapfile ]]; do sitemapfile=sitemap.xml.$RANDOM; done
+
+    {
+        echo '<?xml version="1.0" encoding="UTF-8"?>'
+        echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+
+        # Static pages
+        for page in "$index_file" "$archive_index" "$tags_index" "${non_blogpost_files[@]}"; do
+            [[ -f $page ]] || continue
+            lastmod=$(LC_ALL=C date -r "$page" +"%Y-%m-%d")
+            echo "  <url><loc>$global_url/$page</loc><lastmod>$lastmod</lastmod></url>"
+        done
+
+        # Blog posts
+        while IFS='' read -r i; do
+            is_boilerplate_file "$i" && continue
+            echo -n "." 1>&3
+            lastmod=$(LC_ALL=C date -r "$i" +"%Y-%m-%d")
+            echo "  <url><loc>$global_url/${i#./}</loc><lastmod>$lastmod</lastmod></url>"
+        done < <(ls -t ./*.html)
+
+        echo '</urlset>'
+    } 3>&1 >"$sitemapfile"
+    echo ""
+
+    mv "$sitemapfile" sitemap.xml
+    chmod 644 sitemap.xml
+}
+
 # generate headers, footers, etc
 create_includes() {
     {
@@ -1210,6 +1250,7 @@ do_main() {
     all_posts
     all_tags
     make_rss
+    make_sitemap
     delete_includes
 }
 

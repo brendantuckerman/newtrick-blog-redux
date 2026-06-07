@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
 <channel><title>Newtrick Blog</title><link>http://localhost:8080/index.html</link>
 <description>That's a new trick: Writing from Brendan Tuckerman</description><language>en</language>
-<lastBuildDate>Sun, 07 Jun 2026 16:53:39 +1000</lastBuildDate>
-<pubDate>Sun, 07 Jun 2026 16:53:39 +1000</pubDate>
+<lastBuildDate>Sun, 07 Jun 2026 17:19:21 +1000</lastBuildDate>
+<pubDate>Sun, 07 Jun 2026 17:19:21 +1000</pubDate>
 <atom:link href="http://localhost:8080/feed.rss" rel="self" type="application/rss+xml" />
 </channel></rss>
