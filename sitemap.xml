@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>http://localhost:8080/index.html</loc><lastmod>2026-06-07</lastmod></url>
-  <url><loc>http://localhost:8080/all_posts.html</loc><lastmod>2026-06-07</lastmod></url>
-  <url><loc>http://localhost:8080/all_tags.html</loc><lastmod>2026-06-07</lastmod></url>
-  <url><loc>http://localhost:8080/about.html</loc><lastmod>2026-06-06</lastmod></url>
-  <url><loc>http://localhost:8080/404.html</loc><lastmod>2026-06-07</lastmod></url>
+  <url><loc>https://newtrick.blog/index.html</loc><lastmod>2026-07-07</lastmod></url>
+  <url><loc>https://newtrick.blog/all_posts.html</loc><lastmod>2026-07-07</lastmod></url>
+  <url><loc>https://newtrick.blog/all_tags.html</loc><lastmod>2026-07-07</lastmod></url>
+  <url><loc>https://newtrick.blog/about.html</loc><lastmod>2026-07-07</lastmod></url>
+  <url><loc>https://newtrick.blog/404.html</loc><lastmod>2026-06-07</lastmod></url>
 </urlset>

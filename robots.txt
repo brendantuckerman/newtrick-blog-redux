@@ -1,4 +1,4 @@
-Sitemap: https://yourdomain.com/sitemap.xml
+Sitemap: https://newtrick.blog/sitemap.xml
 
 User-agent: *
 Allow: /
