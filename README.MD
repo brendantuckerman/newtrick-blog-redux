@@ -31,7 +31,7 @@ chmod +x bb.sh
 
 ## Local Workflow
 
-Write posts locally in Markdown, build with bashblog, preview with Python's built-in server, then rsync to the server.
+Write posts locally in Markdown, build with bashblog, preview with Python's built-in server, then commit and push — deployment happens automatically (see [Deployment](#deployment)).
 
 ### Preview locally
 
@@ -59,10 +59,12 @@ Build the post:
 ./bb.sh post drafts/my-post-title.md
 ```
 
-Then deploy:
+Then commit and push to deploy (Github actions takes care of deploy):
 
 ```sh
-rsync -av --exclude-from=".rsync-excludes" . user@yourdomain.com:/var/www/blog/
+git add .
+git commit -m "Post: my post title"
+git push
 ```
 
 ### Edit an existing post
@@ -70,7 +72,9 @@ rsync -av --exclude-from=".rsync-excludes" . user@yourdomain.com:/var/www/blog/
 ```sh
 vim drafts/my-post-title.md
 ./bb.sh edit my-post-title.html
-rsync -av --exclude-from=".rsync-excludes" . user@yourdomain.com:/var/www/blog/
+git add .
+git commit -m "Edit: my post title"
+git push
 ```
 
 ### Rebuild all
@@ -79,7 +83,9 @@ If the template or config changes:
 
 ```sh
 ./bb.sh rebuild all
-rsync -av --exclude-from=".rsync-excludes" . user@yourdomain.com:/var/www/blog/
+git add .
+git commit -m "Rebuild"
+git push
 ```
 
 ## Server Setup
@@ -129,6 +135,20 @@ Restart with `sudo systemctl restart caddy`.
 mkdir -p /var/www/blog
 ```
 
+## Deployment
+
+Pushing to `main` triggers [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml), which rsyncs the repo (minus `.rsync-excludes`) to `/var/www/blog` on the droplet. There is no manual rsync step — git is the single source of truth for what's live.
+
+The workflow connects over SSH as a restricted `deploy` user, whose key is forced (via `authorized_keys`) to only run `rrsync -wo /var/www/blog` — write-only, chrooted to that one directory. Even if the key leaked, it can't read files back, reach other paths, or open a shell.
+
+Required repo secrets (Settings → Secrets and variables → Actions):
+
+- `DROPLET_HOST` — droplet's IP address
+- `DROPLET_USER` — `deploy`
+- `DROPLET_SSH_KEY` — the deploy user's private key
+
+Because generated `.html` files are tracked in git (only `*.md` and `drafts/` are ignored), publishing a post means committing the post's `.html` file along with the regenerated `index.html`, `all_posts.html`, `all_tags.html`, `tag_*.html`, `feed.rss`, and `sitemap.xml` — `git add .` picks all of these up in one go.
+
 ## Site Structure
 
 ```
@@ -146,6 +166,8 @@ mkdir -p /var/www/blog
   *.html             ← individual post pages
   Caddyfile          ← server config (deployed to /etc/caddy/, not /var/www/)
   .rsync-excludes    ← rsync filter list
+  .config            ← bashblog config overrides (e.g. global_url), never edit bb.sh directly
+  .github/workflows/deploy.yml ← CI: rsyncs to the droplet on push to main
 ```
 
 ## Styling
