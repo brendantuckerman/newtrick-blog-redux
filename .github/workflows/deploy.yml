@@ -12,9 +12,9 @@ jobs:
 
       - name: Debug secrets
         run: |
-          if [ -z "${{ secrets.DROPLET_HOST }}" ]; then echo "DROPLET_HOST is EMPTY"; else echo "DROPLET_HOST is set"; fi
-          if [ -z "${{ secrets.DROPLET_USER }}" ]; then echo "DROPLET_USER is EMPTY"; else echo "DROPLET_USER is set"; fi
-          if [ -z "${{ secrets.DROPLET_SSH_KEY }}" ]; then echo "DROPLET_SSH_KEY is EMPTY"; else echo "DROPLET_SSH_KEY is set"; fi
+          printf '%s' "${{ secrets.DROPLET_HOST }}" | wc -c | xargs echo "DROPLET_HOST byte length:"
+          printf '%s' "${{ secrets.DROPLET_USER }}" | wc -c | xargs echo "DROPLET_USER byte length:"
+          printf '%s' "${{ secrets.DROPLET_SSH_KEY }}" | wc -c | xargs echo "DROPLET_SSH_KEY byte length:"
 
       - name: Deploy to droplet
         uses: burnett01/rsync-deployments@7.0.2
