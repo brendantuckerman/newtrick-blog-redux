@@ -10,6 +10,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Debug secrets
+        run: |
+          if [ -z "${{ secrets.DROPLET_HOST }}" ]; then echo "DROPLET_HOST is EMPTY"; else echo "DROPLET_HOST is set"; fi
+          if [ -z "${{ secrets.DROPLET_USER }}" ]; then echo "DROPLET_USER is EMPTY"; else echo "DROPLET_USER is set"; fi
+          if [ -z "${{ secrets.DROPLET_SSH_KEY }}" ]; then echo "DROPLET_SSH_KEY is EMPTY"; else echo "DROPLET_SSH_KEY is set"; fi
+
       - name: Deploy to droplet
         uses: burnett01/rsync-deployments@7.0.2
         with:
