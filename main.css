@@ -419,3 +419,21 @@ html[data-theme="dark"] {
 .about-list li {
   list-style: "> ";
 }
+
+/* Footnotes */
+.footnotes {
+  margin-top: var(--space-l);
+  padding-top: var(--space-m);
+  border-top: 1px solid var(--color-border);
+  font-size: 0.9rem;
+  color: var(--color-muted);
+}
+
+.footnotes li {
+  margin-bottom: var(--space-s);
+}
+
+sup a,
+.footnote-back {
+  text-decoration: none;
+}
