@@ -24,7 +24,7 @@ global_variables() {
     # The typical subtitle for each blog
     global_description="That's a new trick: Writing from Brendan Tuckerman"
     # The public base URL for this blog
-    global_url="http://localhost:8080"
+    global_url="https://newtrick.blog"
 
     # Your name
     global_author="Brendan Tuckerman"
