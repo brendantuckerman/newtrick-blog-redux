@@ -2,7 +2,37 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
 <channel><title>Newtrick Blog</title><link>https://newtrick.blog/index.html</link>
 <description>That's a new trick: Writing from Brendan Tuckerman</description><language>en</language>
-<lastBuildDate>Tue, 07 Jul 2026 14:11:25 +1000</lastBuildDate>
-<pubDate>Tue, 07 Jul 2026 14:11:25 +1000</pubDate>
+<lastBuildDate>Wed, 08 Jul 2026 10:24:21 +1000</lastBuildDate>
+<pubDate>Wed, 08 Jul 2026 10:24:21 +1000</pubDate>
 <atom:link href="https://newtrick.blog/feed.rss" rel="self" type="application/rss+xml" />
+<item><title>
+On Writing Well in the LLM Age
+</title><description><![CDATA[
+
+<blockquote>
+  <p>"Writing is related to character. If your values are sound your writing will
+be sound. It all begins with intention. Figure out what you want to do and how
+you want to do it, and work your way with humanity and integrity to the
+completed article."</p>
+</blockquote>
+
+<p>-- William Zinsser 'On Writing Well'[^1].</p>
+
+<p>I had fallen out of love with writing--mostly because I was so bad at it.</p>
+
+<p>There was a time where I aspired to be a writer; the trouble was I 'knew' I could
+never be one. There were plenty of excuses: I didn't have the right stuff to be a writer
+(whatever that <em>stuff</em> was supposed to be), I didn't have enough life experience,
+I didn't have the right pedigree. I had fallen into the trap of believing that
+the ability to write well was something you either had or you didn't, rather than the result of hard work
+and repeated practice.</p>
+
+<p>Reading 'On Writing Well' recently helped me to reflect on what I had so wrong
+about writing.</p>
+
+<hr />
+]]></description><link>https://newtrick.blog/on-writing-well-in-the-llm-age.html</link>
+<guid>https://newtrick.blog/./on-writing-well-in-the-llm-age.html</guid>
+<dc:creator>Brendan Tuckerman</dc:creator>
+<pubDate>Wed, 08 Jul 2026 10:24:09 +1000</pubDate></item>
 </channel></rss>

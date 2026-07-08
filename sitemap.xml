@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://newtrick.blog/index.html</loc><lastmod>2026-07-07</lastmod></url>
-  <url><loc>https://newtrick.blog/all_posts.html</loc><lastmod>2026-07-07</lastmod></url>
-  <url><loc>https://newtrick.blog/all_tags.html</loc><lastmod>2026-07-07</lastmod></url>
+  <url><loc>https://newtrick.blog/index.html</loc><lastmod>2026-07-08</lastmod></url>
+  <url><loc>https://newtrick.blog/all_posts.html</loc><lastmod>2026-07-08</lastmod></url>
+  <url><loc>https://newtrick.blog/all_tags.html</loc><lastmod>2026-07-08</lastmod></url>
   <url><loc>https://newtrick.blog/about.html</loc><lastmod>2026-07-07</lastmod></url>
   <url><loc>https://newtrick.blog/404.html</loc><lastmod>2026-06-07</lastmod></url>
+  <url><loc>https://newtrick.blog/on-writing-well-in-the-llm-age.html</loc><lastmod>2026-07-08</lastmod></url>
 </urlset>
